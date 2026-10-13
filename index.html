@@ -76,7 +76,8 @@ document.addEventListener('submit',function(event){
   if(!L) return;
   let lines=[];
   if(form.id==='contactForm'){
-    lines=[L.hello, (lang==='fr'?'Je m’appelle ':'My name is ')+get('nome')+'.',L.interest+get('servico')+'.',get('mensagem')?(L.message+': '+get('mensagem')):'',L.please];
+    const nameIntro=lang==='pt'?'O meu nome é ':lang==='fr'?'Je m’appelle ':'My name is ';
+    lines=[L.hello,nameIntro+get('nome')+'.',L.interest+get('servico')+'.',get('mensagem')?(L.message+': '+get('mensagem')):'',L.please];
   } else if(form.id==='appointmentForm'){
     lines=[L.hello,L.appointment,L.name+': '+get('nome'),L.contact+': '+get('telefone'),L.service+': '+get('servico'),L.date+': '+get('data'),L.time+': '+get('horario'),get('mensagem')?L.extra+': '+get('mensagem'):'',L.confirmation];
   } else if(form.id==='translationForm'){
