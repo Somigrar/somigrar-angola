@@ -60,6 +60,32 @@ document.getElementById('translationForm').addEventListener('submit',function(ev
 const contactInfo=document.querySelector('.contact-info');if(contactInfo){const email=document.createElement('div');email.className='contact-item';email.innerHTML='<b>✉</b><span><a href="mailto:somigrarangola@gmail.com">somigrarangola@gmail.com</a></span>';contactInfo.appendChild(email);}
 </script>
 <script>
+document.addEventListener('submit',function(event){
+  const form=event.target;
+  if(!form || !['contactForm','appointmentForm','translationForm','guideForm'].includes(form.id)) return;
+  event.preventDefault();
+  event.stopImmediatePropagation();
+  const data=new FormData(form);
+  const get=(key)=>String(data.get(key)||'').trim();
+  const lang=document.getElementById('languageSelect')?.value||'pt';
+  const L={
+    pt:{hello:'Olá, Somigrar Angola!',name:'Nome',contact:'Contacto',service:'Serviço',message:'Mensagem',interest:'Tenho interesse em: ',please:'Podem, por favor, orientar-me?',appointment:'Gostaria de solicitar um agendamento.',date:'Data pretendida',time:'Horário preferido',extra:'Informações adicionais',confirmation:'Compreendo que o pedido depende de confirmação pela equipa.',quote:'Gostaria de pedir um orçamento para tradução de documentos.',document:'Tipo de documento',source:'Idioma de origem',target:'Idioma para tradução',purpose:'Finalidade/país',pages:'Informações adicionais',quoteEnd:'Aguardo a avaliação do pedido, do preço e do prazo.',guide:'Gostaria de solicitar informações sobre um serviço de intérprete/guia turístico.',kind:'Tipo de serviço',language:'Idioma(s)',destination:'Local/destino',period:'Data/período',people:'Número de pessoas',details:'Detalhes',guideEnd:'Aguardo confirmação da disponibilidade, preço e condições.'},
+    en:{hello:'Hello, Somigrar Angola!',name:'Name',contact:'Contact',service:'Service',message:'Message',interest:'I am interested in: ',please:'Could you please guide me?',appointment:'I would like to request an appointment.',date:'Preferred date',time:'Preferred time',extra:'Additional information',confirmation:'I understand this request is subject to confirmation by the team.',quote:'I would like to request a quote for document translation.',document:'Document type',source:'Source language',target:'Target language',purpose:'Purpose/country',pages:'Additional information',quoteEnd:'I await your assessment of the request, price and timeframe.',guide:'I would like information about an interpreter/tour guide service.',kind:'Service type',language:'Language(s)',destination:'Location/destination',period:'Date/period',people:'Number of people',details:'Details',guideEnd:'Please confirm availability, price and conditions.'},
+    fr:{hello:'Bonjour, Somigrar Angola !',name:'Nom',contact:'Contact',service:'Service',message:'Message',interest:'Je souhaite des informations sur : ',please:'Pourriez-vous m’orienter, s’il vous plaît ?',appointment:'Je souhaite demander un rendez-vous.',date:'Date souhaitée',time:'Heure souhaitée',extra:'Informations complémentaires',confirmation:'Je comprends que cette demande doit être confirmée par l’équipe.',quote:'Je souhaite demander un devis pour la traduction de documents.',document:'Type de document',source:'Langue source',target:'Langue cible',purpose:'Objet/pays',pages:'Informations complémentaires',quoteEnd:'Dans l’attente de votre évaluation de la demande, du prix et du délai.',guide:'Je souhaite obtenir des informations sur un service d’interprète/guide touristique.',kind:'Type de service',language:'Langue(s)',destination:'Lieu/destination',period:'Date/période',people:'Nombre de personnes',details:'Détails',guideEnd:'Merci de confirmer la disponibilité, le prix et les conditions.'}
+  }[lang] || null;
+  if(!L) return;
+  let lines=[];
+  if(form.id==='contactForm'){
+    lines=[L.hello, (lang==='fr'?'Je m’appelle ':'My name is ')+get('nome')+'.',L.interest+get('servico')+'.',get('mensagem')?(L.message+': '+get('mensagem')):'',L.please];
+  } else if(form.id==='appointmentForm'){
+    lines=[L.hello,L.appointment,L.name+': '+get('nome'),L.contact+': '+get('telefone'),L.service+': '+get('servico'),L.date+': '+get('data'),L.time+': '+get('horario'),get('mensagem')?L.extra+': '+get('mensagem'):'',L.confirmation];
+  } else if(form.id==='translationForm'){
+    lines=[L.hello,L.quote,L.name+': '+get('nome'),L.contact+': '+get('telefone'),L.document+': '+get('documento'),L.source+': '+get('origem'),L.target+': '+get('destino'),get('finalidade')?L.purpose+': '+get('finalidade'):'',get('mensagem')?L.pages+': '+get('mensagem'):'',L.quoteEnd];
+  } else if(form.id==='guideForm'){
+    lines=[L.hello,L.guide,L.name+': '+get('nome'),L.contact+': '+get('telefone'),L.kind+': '+get('tipo'),L.language+': '+get('idioma'),L.destination+': '+get('destino'),L.period+': '+get('data'),L.people+': '+get('pessoas'),get('mensagem')?L.details+': '+get('mensagem'):'',L.guideEnd];
+  }
+  window.open('https://wa.me/244952511567?text='+encodeURIComponent(lines.filter(Boolean).join('\n')),'_blank','noopener');
+},true);
 (() => {
   const dictionary = {
     'Idioma':['Language','Langue'],'Selecionar idioma':['Select language','Choisir la langue'],
